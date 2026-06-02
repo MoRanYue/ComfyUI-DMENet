@@ -1,0 +1,3 @@
+# ComfyUI already provides torch/torchvision in most installs.
+# This node uses only PyTorch and NumPy.
+numpy>=1.23
