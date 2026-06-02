@@ -93,7 +93,7 @@ class DMENetFocusMapNode:
             }
         }
 
-    def estimate(self, image, checkpoint, normalize, focus_gamma, defocus_gamma, smooth, max_side, preview_mode):
+    def estimate(self, image, checkpoint, normalize, focus_gamma, defocus_gamma, smooth, max_side):
         if checkpoint.startswith("put_"):
             raise FileNotFoundError(f"Please put DMENet_BDCS.npz or converted .pt in {MODEL_DIR}")
 
