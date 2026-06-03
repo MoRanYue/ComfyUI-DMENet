@@ -113,6 +113,8 @@ class DMENetFocusMapNode:
         if defocus.shape[-2:] != orig_hw:
             defocus = F.interpolate(defocus, size=orig_hw, mode="bilinear", align_corners=False)
 
+        defocus = defocus.cpu().float()
+
         if normalize == "minmax_per_image":
             # b = defocus.shape[0]
             # flat = defocus.reshape(b, -1)
