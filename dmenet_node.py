@@ -114,11 +114,22 @@ class DMENetFocusMapNode:
             defocus = F.interpolate(defocus, size=orig_hw, mode="bilinear", align_corners=False)
 
         if normalize == "minmax_per_image":
+            # b = defocus.shape[0]
+            # flat = defocus.reshape(b, -1)
+            # mn = flat.min(dim=1)[0].reshape(b, 1, 1)
+            # mx = flat.max(dim=1)[0].reshape(b, 1, 1)
+            # defocus = (defocus - mn) / (mx - mn + 1e-6)
+
+            eps = 1e-6
+            
             b = defocus.shape[0]
             flat = defocus.reshape(b, -1)
-            mn = flat.min(dim=1)[0].reshape(b, 1, 1)
-            mx = flat.max(dim=1)[0].reshape(b, 1, 1)
-            defocus = (defocus - mn) / (mx - mn + 1e-6)
+
+            low = torch.quantile(flat, 0.01, dim=1).reshape(b, 1, 1)
+            high = torch.quantile(flat, 0.99, dim=1).reshape(b, 1, 1)
+
+            defocus = (defocus - low) / (high - low + eps)
+            defocus = defocus.clamp(0.0, 1.0)
 
         if smooth > 0:
             k = int(smooth)
